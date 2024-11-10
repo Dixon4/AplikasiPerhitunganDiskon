@@ -1,4 +1,5 @@
 
+import java.awt.event.ItemEvent;
 import javax.swing.JOptionPane;
 
 /*
@@ -23,7 +24,15 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
    private void hitungDiskon() {
     try {
         double hargaAsli = Double.parseDouble(txtHargaAsli.getText());
-        double diskon = Double.parseDouble(comboDiskon.getSelectedItem().toString()) / 100;
+
+        // Ambil nilai diskon dari JSlider atau JComboBox
+        double diskon;
+        if (sliderDiskon.getValueIsAdjusting()) {
+            diskon = sliderDiskon.getValue() / 100.0; // Nilai dari JSlider
+        } else {
+            diskon = Double.parseDouble(comboDiskon.getSelectedItem().toString()) / 100.0; // Nilai dari JComboBox
+        }
+
         double penghematan = hargaAsli * diskon;
         double tambahanDiskon = 0.0;
         String kupon = txtKodeKupon.getText();
@@ -64,6 +73,7 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
 
 
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,6 +102,7 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRiwayat = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
+        sliderDiskon = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -171,7 +182,12 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(txtPenghematan, gridBagConstraints);
 
-        comboDiskon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "30" }));
+        comboDiskon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "30", "40", "50", "60", "70", "80", "90" }));
+        comboDiskon.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboDiskonItemStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -237,6 +253,22 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel2.add(jLabel7, gridBagConstraints);
 
+        sliderDiskon.setMajorTickSpacing(10);
+        sliderDiskon.setMaximum(90);
+        sliderDiskon.setMinimum(10);
+        sliderDiskon.setPaintLabels(true);
+        sliderDiskon.setValue(10);
+        sliderDiskon.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderDiskonStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        jPanel2.add(sliderDiskon, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -256,6 +288,24 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void comboDiskonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboDiskonItemStateChanged
+         if (evt.getStateChange() == ItemEvent.SELECTED) {
+        // Ambil nilai dari JComboBox dan ubah ke integer
+        int diskon = Integer.parseInt(comboDiskon.getSelectedItem().toString());
+        
+        // Set nilai JSlider sesuai dengan pilihan di JComboBox
+        sliderDiskon.setValue(diskon);
+    }
+    }//GEN-LAST:event_comboDiskonItemStateChanged
+
+    private void sliderDiskonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderDiskonStateChanged
+        // Ambil nilai dari JSlider
+        int diskon = sliderDiskon.getValue();
+    
+        // Set nilai JComboBox sesuai dengan nilai di JSlider
+        comboDiskon.setSelectedItem(String.valueOf(diskon));
+    }//GEN-LAST:event_sliderDiskonStateChanged
 
     /**
      * @param args the command line arguments
@@ -306,6 +356,7 @@ public class HitungDiskonFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSlider sliderDiskon;
     private javax.swing.JTextField txtHargaAkhir;
     private javax.swing.JTextField txtHargaAsli;
     private javax.swing.JTextField txtKodeKupon;
